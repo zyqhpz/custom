@@ -76,7 +76,7 @@ if ($order->get_payment_method_title() == 'JomPay' && $order->get_status() == 'o
 	$rrn = new RRN();
 
 	$order_id = $order->get_id();
-	$sRNN = $rnn->getRRN($order_id);
+	$sRRN = $rrn->getRRN($order_id);
 	$due_date = $rrn->getDueDate($order_id);
 	?>
 	<div class="jompay-bill" id="jompay-bill" style="display: flex; align-items: center; margin-top: 20px;">
