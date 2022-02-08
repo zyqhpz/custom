@@ -117,7 +117,7 @@ if ( ! empty( $tabs ) ) :
 					}
 
 					if ($temperature) {
-						echo "<span><strong>Temperature: </strong>" . $temperature . " °C</span><br>";
+						echo "<span><strong>Temperature Resistance: </strong>" . $temperature . " °C</span><br>";
 					}
 
 					if ($microwavable != 'undefined' && $microwavable != '') {
