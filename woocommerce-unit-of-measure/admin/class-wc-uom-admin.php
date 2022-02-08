@@ -49,6 +49,9 @@ class WC_UOM_Admin {
 		add_action( 'dokan_process_product_meta', array( $this, 'extra_product_knowledge_meta_fields_save' ) );
 		
 		add_action( 'woocommerce_after_add_to_cart_quantity', array( $this, 'show_uom_product_page' ) );
+
+		add_action( 'woocommerce_admin_order_item_values', array( $this, 'show_uom_in_admin_order'), 10, 3 );
+		add_action( 'woocommerce_admin_order_item_headers', array( $this, 'admin_order_item_header' ) );
 	}
 
 	/**
@@ -99,6 +102,54 @@ class WC_UOM_Admin {
 		    ?> <label for="_woo_uom_input" class="form-label"><?php esc_html_e( 'UOM', 'dokan-lite' ); ?></label> <?php
 			dokan_post_input_box( $post_id, '_woo_uom_input' );
 		echo '</div>';
+	}
+
+	public function show_uom_product_page() {
+		global $post;
+		$woo_uom_output = get_post_meta( $post->ID, '_woo_uom_input', true );
+		echo '<h2 style="font-size: 18px; margin: 12px; padding-top: 24px; display: block;">' . esc_attr( $woo_uom_output, 'woocommerce-uom' ) . '</h2>';
+	}
+
+	/**
+	* Add UOM to the Order Items header on the admin Order Details page.
+	*/
+	public function admin_order_item_header() {
+			echo '<th class="uom">' . __( 'UOM', 'woocommerce-uom' ) . '</th>';
+	}
+
+	public function show_uom_in_admin_order( $product, $item, $item_id ) {
+
+		$woo_uom_output = get_post_meta( $item['product_id'], '_woo_uom_input', true );
+
+		if ( $woo_uom_output ) {
+			echo '<td><div class="view">' . esc_attr( $woo_uom_output, 'woocommerce-uom' ) . '</div></td>';
+		}
+		else {
+			echo '<td><div class="view">' . esc_attr( '-', 'woocommerce-uom' ) . '</div></td>';
+		}
+
+		/*
+		echo '<td><div class="view">' . esc_attr( $woo_uom_output, 'woocommerce-uom' ) . '</div></td>';
+		
+
+		$show_weight = null;
+		if ( get_option( 'wcsa_weight_admin_order_details' ) == 'yes' ) {
+			$show_weight = true;
+		}
+		$show_dimensions = null;
+		if ( get_option( 'wcsa_dimensions_admin_order_details' ) == 'yes' ) {
+			$show_dimensions = true;
+		}
+
+		if ( get_option( 'wcsa_admin_order_details' ) != 'no' ) {
+			$skip_atts = null;
+		} else {
+			$skip_atts = true;
+		}
+		if ( is_object($product) ) {
+			echo '<td><div class="view">' . wp_kses_post( $this->the_attributes( $product, 'span', $show_weight, $show_dimensions, $skip_atts ) ) . '</div></td>';
+		}
+		*/
 	}
 	
 	/**
@@ -477,12 +528,6 @@ class WC_UOM_Admin {
 		</div>
 
 		<?php
-	}
-	
-	public function show_uom_product_page() {
-		global $post;
-		$woo_uom_output = get_post_meta( $post->ID, '_woo_uom_input', true );
-		echo '<h2 style="font-size: 18px; margin: 12px; padding-top: 24px; display: block;">' . esc_attr( $woo_uom_output, 'woocommerce-uom' ) . '</h2>';
 	}
 	 
 }
