@@ -50,9 +50,18 @@ if ( $show_downloads ) {
 	$amount = $order->get_total();
 	$order_id = $order->get_id();
 	$order_date = $order->get_date_created();
+
+	// Get time in local timezone
+	$order_date_timestamp = $order_date->getTimestamp();
+	$order_date_local = $order_date_timestamp + (get_option('gmt_offset') * 3600);
+	$order_date = date('Y-m-d H:i:s', $order_date_local);
+
 	$validity = $jompay->get_option( 'validity' );
 	$validity_date = $validity - 1;
-	$due_date = date('Y-m-d', strtotime($order_date . ' + ' . $validity_date . ' days'));
+
+	// add days to order_date_local
+	$due_order_date_local = $order_date_local + $validity_date * (24 * 60 * 60);
+	$due_date = date('Y-m-d', $due_order_date_local);
 
 	$sRRN = $rrn->generate_sRRN($order_id, $amount, $order_date, $validity, $due_date);
 	?>

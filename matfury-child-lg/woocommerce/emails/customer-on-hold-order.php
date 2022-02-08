@@ -54,18 +54,30 @@ if ( $additional_content ) {
 	echo wp_kses_post( wpautop( wptexturize( $additional_content ) ) );
 }
 
+if ($order->get_payment_method() == 'bacs') {
+	$order_date = $order->get_date_created();
+	$order_date_time = $order_date->getTimestamp();
+	$order_expired_date_time_local = $order_date_time + (get_option('gmt_offset') * 3600) + (24 * 3600); // plus 1 day
+
+	$bacs_expired_date = date('d/m/Y', $order_expired_date_time_local);
+	$bacs_expired_time = date('H:i', $order_expired_date_time_local);
+
+	// convert into 12 hour format
+	$bacs_expired_time_12 = date('g:i A', $order_expired_date_time_local);
+	
+	?>
+	<span style='font-size: 15px; padding: 10px;'>Expired Date: <?php echo $bacs_expired_date . ' ' . $bacs_expired_time_12 ?></span>
+	<?php
+}
+
+
 if ($order->get_payment_method_title() == 'JomPay' && $order->get_status() == 'on-hold') {
 	$jompay = new Jompay();
 	$rrn = new RRN();
 
-	$amount = $order->get_total();
 	$order_id = $order->get_id();
-	$order_date = $order->get_date_created();
-	$validity = $jompay->get_option( 'validity' );
-	$validity_date = $validity - 1;
-	$due_date = date('Y-m-d', strtotime($order_date . ' + ' . $validity_date . ' days'));
-
-	$sRRN = $rrn->generate_sRRN($order_id, $amount, $order_date, $validity, $due_date);
+	$sRNN = $rnn->getRRN($order_id);
+	$due_date = $rrn->getDueDate($order_id);
 	?>
 	<div class="jompay-bill" id="jompay-bill" style="display: flex; align-items: center; margin-top: 20px;">
 		<img style='width: 80px; height: 80px; margin-right: 10px; margin-bottom: 10px;' src='https://www.jompay.com.my/img/logo.png'>
