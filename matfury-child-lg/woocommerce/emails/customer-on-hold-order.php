@@ -75,9 +75,23 @@ if ($order->get_payment_method_title() == 'JomPay' && $order->get_status() == 'o
 	$jompay = new Jompay();
 	$rrn = new RRN();
 
+	$amount = $order->get_total();
 	$order_id = $order->get_id();
-	$sRRN = $rrn->getRRN($order_id);
-	$due_date = $rrn->getDueDate($order_id);
+	$order_date = $order->get_date_created();
+
+	// Get time in local timezone
+	$order_date_timestamp = $order_date->getTimestamp();
+	$order_date_local = $order_date_timestamp + (get_option('gmt_offset') * 3600);
+	$order_date = date('Y-m-d H:i:s', $order_date_local);
+
+	$validity = $jompay->get_option( 'validity' );
+	$validity_date = $validity - 1;
+
+	// add days to order_date_local
+	$due_order_date_local = $order_date_local + $validity_date * (24 * 60 * 60);
+	$due_date = date('Y-m-d', $due_order_date_local);
+
+	$sRRN = $rrn->generate_sRRN($order_id, $amount, $order_date, $validity, $due_date);
 	?>
 	<div class="jompay-bill" id="jompay-bill" style="display: flex; align-items: center; margin-top: 20px;">
 		<img style='width: 80px; height: 80px; margin-right: 10px; margin-bottom: 10px;' src='https://www.jompay.com.my/img/logo.png'>
@@ -92,13 +106,13 @@ if ($order->get_payment_method_title() == 'JomPay' && $order->get_status() == 'o
 				<h4>
 					<b>Ref-1: </b>
 					<span style="font-size: 15px; font-weight: normal;">
-						<?php echo $sRRN;?>
+						<?php echo esc_html( strval( $sRRN ) ); ?>
 					</span>
 				</h4>
 			</div>
 		</div>
 	</div>
-	<span style='font-size: 15px; padding: 10px;'>Reference code valid until 11:50 P.M. <?php echo $due_date ?> only.  </span>
+	<span style='font-size: 15px; padding: 10px;'>Reference code valid until 11:50 P.M. <?php echo esc_html( strval( $due_date ) ); ?> only.  </span>
 	<style>
 		h4 {
 			width: 100%;
