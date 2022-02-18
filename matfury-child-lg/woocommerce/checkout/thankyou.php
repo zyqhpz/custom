@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
 
 		<?php if ( $order->has_status( 'failed' ) ) : ?>
 
-			<!-- CHANGE TEXT FOR FAILED HERE -->
+			<!-- ADD NEW HERE - CHANGE TEXT FOR FAILED HERE -->
 			<!-- <p class="woocommerce-notice woocommerce-notice--error woocommerce-thankyou-order-failed"><?php //esc_html_e( 'Unfortunately your order cannot be processed as the originating bank/merchant has declined your transaction. Please attempt your purchase again.', 'woocommerce' ); ?></p> -->
 			<p class="woocommerce-notice woocommerce-notice--error woocommerce-thankyou-order-failed"><?php esc_html_e( 'Unfortunately, your order cannot be processed as the transaction has failed. Please attempt your purchase again.', 'woocommerce' ); ?></p>
 
@@ -82,7 +82,7 @@ defined( 'ABSPATH' ) || exit;
 						<strong><?php echo wp_kses_post( $order->get_payment_method_title() ); ?></strong>
 					</li>
 				<?php endif; ?>
-
+				<!-- ADD NEW HERE : show order status -->
 				<li class="woocommerce-order-overview__status status">
 					<?php esc_html_e( 'Status:', 'woocommerce' ); ?>
 					<strong><?php echo esc_html(wc_get_order_status_name( $order->get_status() )); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></strong>

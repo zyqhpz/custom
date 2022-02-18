@@ -54,6 +54,7 @@ if ( $additional_content ) {
 	echo wp_kses_post( wpautop( wptexturize( $additional_content ) ) );
 }
 
+// Direct bank transfer
 if ($order->get_payment_method() == 'bacs') {
 	$order_date = $order->get_date_created();
 	$order_date_time = $order_date->getTimestamp();

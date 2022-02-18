@@ -45,7 +45,8 @@ $text_align = is_rtl() ? 'right' : 'left';
             <tr>
                 <th class="td" scope="col" style="text-align:<?php echo esc_attr( $text_align ); ?>;"><?php esc_html_e( 'Product', 'dokan-lite' ); ?></th>
                 <th class="td" scope="col" style="text-align:<?php echo esc_attr( $text_align ); ?>;"><?php esc_html_e( 'Quantity', 'dokan-lite' ); ?></th>
-				<th class="td" scope="col" style="text-align:<?php echo esc_attr( $text_align ); ?>;"><?php esc_html_e( 'UOM', 'dokan-lite' ); ?></th>
+				<!-- ADD NEW HERE - add new column for UOM -->
+                <th class="td" scope="col" style="text-align:<?php echo esc_attr( $text_align ); ?>;"><?php esc_html_e( 'UOM', 'dokan-lite' ); ?></th>
                 <th class="td" scope="col" style="text-align:<?php echo esc_attr( $text_align ); ?>;"><?php esc_html_e( 'Price', 'dokan-lite' ); ?></th>
             </tr>
         </thead>
